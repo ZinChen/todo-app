@@ -1,5 +1,7 @@
 <template lang="pug">
-  .task
+  .task(
+    @click="openItem"
+  )
     .task-icon.icon
       i.ion-calendar(v-if="scheduled")
       i.ion-android-time(v-else)
@@ -31,31 +33,16 @@ export default {
     idAttr() {
       return `item-${this.itemId}`
     }
+  },
+  methods: {
+    openItem() {
+      // redirect on page /new
+    }
   }
 }
 </script>
 
 
 <style lang="scss" scoped>
-  .task-checkbox {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-
-  .task-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: .5rem;
-    height: .5rem;
-  }
-
-  .task-title {
-    font-weight: 500;
-    font-size: 16px;
-  }
-
-  .task-description {
-    font-size: 12px;
-  }
+  @import '../styles/todo-item';
 </style>

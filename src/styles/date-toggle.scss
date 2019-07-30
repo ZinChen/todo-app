@@ -1,0 +1,24 @@
+.date-toggle-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-val {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.month-val {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.prev-arrow,
+.next-arrow {
+  padding: 0 15px;
+}
+
+.current-date {
+  // text-transform: uppercase;
+}

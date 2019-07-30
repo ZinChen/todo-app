@@ -1,0 +1,44 @@
+@mixin task-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px 5px;
+  border: 1px solid #00B2FE;
+  border-radius: 10px;
+  line-height: 1.2;
+}
+
+.task {
+  @include task-frame;
+
+  height: 55px;
+}
+
+.task-new {
+  @include task-frame;
+
+  flex-direction: column;
+}
+
+.task-checkbox {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.task-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: .5rem;
+  height: .5rem;
+}
+
+.task-title {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.task-description {
+  font-size: 12px;
+}

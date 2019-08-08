@@ -4,6 +4,7 @@ main-layout
     .task-c
       todo-item(
         v-for="todo in todos",
+        :key="todo.id"
         :itemId="todo.id",
         :title="todo.title",
         :description="todo.description",

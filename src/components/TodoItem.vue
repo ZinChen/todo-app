@@ -1,6 +1,6 @@
 <template lang="pug">
   .task(
-    @click="openItem"
+    @click="deleteItem"
   )
     .task-icon.icon
       i.ion-calendar(v-if="scheduled")
@@ -37,6 +37,9 @@ export default {
   methods: {
     openItem() {
       // redirect on page /new
+    },
+    deleteItem() {
+      this.$store.commit('deleteTodo', this.itemId)
     }
   }
 }

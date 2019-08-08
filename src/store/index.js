@@ -1,41 +1,35 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { firestoreAction, vuexfireMutations } from 'vuexfire'
 
 Vue.use(Vuex)
 
-const todos = [
-  {
-    id: '1',
-    title: "Develop TODO App",
-    description: "Create first page",
-    scheduled: true
-  },
-  {
-    id: '2',
-    title: "Daily excercise",
-    description: "Do gym",
-    scheduled: false
-  }
-]
-
 export default new Vuex.Store({
   state: {
-    todos,
+    todos: [],
     user: null,
   },
   mutations: {
+    ...vuexfireMutations,
     addTodo(state, todo) {
-      state.todos.push(todo)
+      state.todosRef.add(todo)
     },
     updateTodo(state, todo) {
-      let todoIndex = state.todos.findIndex(sTodo => sTodo.id == todo.id)
-      if (todoIndex > -1) {
-        state.todos[todoIndex] = todo
-      }
+      state.todosRef.doc(todo.id).update(todo)
     },
     deleteTodo(state, id) {
-      let todoIndex = state.todos.findIndex(sTodo => sTodo.id == id)
-      todoIndex > -1 && state.todos.splice(todoIndex, 1)
+      state.todosRef.doc(id).delete()
+    },
+    setTodosRef(state, ref) {
+      state.todosRef = ref
     }
+  },
+  actions: {
+    setTodosRef({ commit }, ref) {
+      commit('setTodosRef', ref)
+    },
+    bindFirestoreRef: firestoreAction(({ bindFirestoreRef }, ref) => {
+      bindFirestoreRef('todos', ref)
+    })
   }
 })

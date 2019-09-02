@@ -1,35 +1,17 @@
 <template lang="pug">
 main-layout
   template(v-slot:body)
-    .task-new
-      .task-icon.icon
-        i.ion-calendar(v-if="todo.scheduled")
-        i.ion-android-time(v-else)
-      .task-content
-        .task-title-label Title
-        input.task-title-info(
-          v-model="todo.title"
-        )
-        .task-description-label Description
-        input.task-description-info(
-          v-model="todo.description"
-        )
-      .control
-        input(
-          type="button"
-          value="Discard"
-          @click="goBack"
-        )
-        input(
-          type="button"
-          value="Save"
-          @click="createTodo"
-        )
+    todo-form(
+      @discard="goBack",
+      @save="editTodo",
+      :todo="todo"
+    )
 </template>
 
 <script>
 import { timehash } from '../common/lib'
 import MainLayout from './MainLayout.vue'
+import TodoForm from '../components/TodoForm.vue'
 
 const emptyTodo = {
   scheduled: false,
@@ -45,7 +27,8 @@ export default {
     }
   },
   components: {
-    MainLayout
+    MainLayout,
+    TodoForm,
   },
   methods: {
 
@@ -56,7 +39,7 @@ export default {
       } = this.todo
 
       this.$store.commit('addTodo', {
-        id: timehash(),
+        // id: timehash(),
         title,
         description
       })
@@ -64,7 +47,6 @@ export default {
       this.todo = emptyTodo
       this.$router.push('/')
     },
-
 
     goBack() {
       this.$router.push('/')
@@ -77,4 +59,3 @@ export default {
 
 
 </style>
-

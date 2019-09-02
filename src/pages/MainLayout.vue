@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import DateToggle from './DateToggle.vue'
+import DateToggle from '../components/DateToggle.vue'
 
 export default {
   name: 'main-layout',

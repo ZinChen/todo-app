@@ -1,45 +1,34 @@
 <template lang="pug">
   .task(
-    @click="deleteItem"
+    @click="openItem"
   )
     .task-icon.icon
-      i.ion-calendar(v-if="scheduled")
+      i.ion-calendar(v-if="todo.scheduled")
       i.ion-android-time(v-else)
     .task-checkbox
       input(
         :id="idAttr",
-        :name="itemId"
+        :name="todo.id"
         type="checkbox",
       )
     .task-content
-      .task-title {{ title }}
-      .task-description {{ description }}
+      .task-title {{ todo.title }}
+      .task-description {{ todo.description }}
 </template>
 
 
 <script>
 export default {
   name: 'todo-item',
-  props: {
-    itemId: [String, Number],
-    title: String,
-    description: String,
-    scheduled: {
-      type: Boolean,
-      default: false
-    }
-  },
+  props: ['todo'],
   computed: {
     idAttr() {
-      return `item-${this.itemId}`
+      return `item-${this.todo.id}`
     }
   },
   methods: {
     openItem() {
-      // redirect on page /new
-    },
-    deleteItem() {
-      this.$store.commit('deleteTodo', this.itemId)
+      this.$router.push(`/todo/${this.todo.id}`)
     }
   }
 }

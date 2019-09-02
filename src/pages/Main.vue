@@ -5,10 +5,7 @@ main-layout
       todo-item(
         v-for="todo in todos",
         :key="todo.id"
-        :itemId="todo.id",
-        :title="todo.title",
-        :description="todo.description",
-        :scheduled="todo.scheduled"
+        v-bind:todo="todo"
       )
 
     .create-task-c
@@ -21,11 +18,11 @@ main-layout
 
 <script>
 import MainLayout from './MainLayout.vue'
-import TodoItem from './TodoItem.vue'
+import TodoItem from '../components/TodoItem.vue'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'main-page',
+  name: 'main',
   components: {
     MainLayout,
     TodoItem,

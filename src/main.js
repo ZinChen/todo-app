@@ -3,9 +3,10 @@ import Router from 'vue-router'
 import store from './store'
 import firebase from 'firebase'
 import App from './App.vue'
-import Main from './components/Main.vue'
-import NewItem from './components/NewItem.vue'
-import Login from './components/Login.vue'
+import Main from './pages/Main.vue'
+import ItemNew from './pages/ItemNew.vue'
+import ItemEdit from './pages/ItemEdit.vue'
+import Login from './pages/Login.vue'
 
 require('./styles/main.scss')
 
@@ -14,8 +15,9 @@ Vue.use(Router)
 
 let routes = [
   { path: '/', component: Main },
-  { path: '/new', component: NewItem },
-  { path: '/login', component: Login}
+  { path: '/new', component: ItemNew },
+  { path: '/login', component: Login },
+  { path: '/todo/:id', component: ItemEdit },
 ]
 
 let router = new Router({

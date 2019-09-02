@@ -24,6 +24,11 @@ export default new Vuex.Store({
       state.todosRef = ref
     }
   },
+  getters: {
+    todoById: state => id => {
+      return state.todos.find((todo) => todo.id === id)
+    }
+  },
   actions: {
     setTodosRef({ commit }, ref) {
       commit('setTodosRef', ref)

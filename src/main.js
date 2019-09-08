@@ -46,7 +46,6 @@ new Vue({
       if (!user) {
         return
       }
-      console.log('user', user)
       const ref = firebaseApp.firestore().collection('users').doc(user.uid).collection('todos')
       this.$store.dispatch('setTodosRef', ref)
       this.$store.dispatch('bindFirestoreRef', ref)

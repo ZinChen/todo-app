@@ -8,6 +8,7 @@ main-layout
         v-bind:todo="todo"
       )
 
+    //- replace create task with add from existing or create screen
     .create-task-c
       .create-task.task(
         @click="openNewTask"
@@ -22,7 +23,7 @@ import TodoItem from '../components/TodoItem.vue'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'main',
+  name: 'main-page',
   components: {
     MainLayout,
     TodoItem,

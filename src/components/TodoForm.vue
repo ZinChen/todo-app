@@ -1,8 +1,8 @@
 <template lang="pug">
   .todo-form
-    slot(name="fields")
+    slot(name="fields", v-if="todo")
       .task-icon.icon
-        i.ion-calendar(v-if="todo.scheduled")
+        i.ion-calendar(v-if="this.todo.type == 'scheduled'")
         i.ion-android-time(v-else)
       .task-content
         .task-title-label Title
@@ -14,6 +14,41 @@
         input.task-description-info(
           v-model="todo.description"
         )
+        .task-parent-label Parent task
+        //- select.task-parent(
+        //-   v-model="todo.parentTodo"
+        //- )
+        //-   option(
+        //-     v-for="todo in todos"
+        //-     :value="todo.id"
+        //-   ) {{ todo.title }}
+        .task-scheduled-lable Scheduled
+        input.task-scheduled(
+          type="checkbox"
+          @change="scheduledCheckbox"
+          v-model="scheduled"
+        )
+        .form-group(
+          v-if="this.todo.type == 'simple'"
+        )
+          .task-date-label Planned on
+          input.task-date(
+            type="date"
+            v-model="todo.datePlanned"
+          )
+          .scheduled-checkbox-container(
+            v-if="this.isNew"
+          )
+        .schedule-container(
+          v-if="this.todo.type == 'scheduled'"
+        ) Schedule
+          todo-weekdays(
+            :todo="todo"
+            @updateSchedule="updateSchedule"
+          )
+        .task-add-subtask(
+          v-if="!this.isNew && this.todo.type != 'scheduled'"
+        ) Add subtask here
     slot(name="controls")
       .control
         input(
@@ -29,17 +64,43 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import TodoWeekdays from './TodoWeekdays.vue'
+
 export default {
   name: 'todo-form',
-  props: ['todo'],
+  components: {
+    TodoWeekdays
+  },
+  data() {
+    return {
+      scheduled: false,
+    }
+  },
+  computed: {
+    todo() {
+      return this.$store.getters.currentTodo()
+    },
+    isNew() {
+      return !this.todo.id
+    },
+    ...mapState([
+      'todos'
+    ])
+  },
   methods: {
     discard() {
-      this.$emit('discard')
+      this.$emit('discard', this.todo)
     },
     save() {
-      this.$emit('save')
+      this.$emit('save', this.todo)
     },
+    scheduledCheckbox() {
+      this.todo.type = this.scheduled ? 'scheduled' : 'simple'
+    },
+    updateSchedule(schedule) {
+      this.todo.schedule = schedule
+    }
   }
 }
 </script>
-

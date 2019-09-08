@@ -22,11 +22,22 @@ export default new Vuex.Store({
     },
     setTodosRef(state, ref) {
       state.todosRef = ref
+    },
+    setCurrent(state, prop) {
+      state.current = Object.assign({}, state.current, prop)
     }
   },
   getters: {
     todoById: state => id => {
       return state.todos.find((todo) => todo.id === id)
+    },
+    currentTodo: (state, getters) => () => {
+      const id = (state.current || {}).todoId
+      return id ?
+        getters.todoById(id)
+        : {
+          type: 'simple'
+        }
     }
   },
   actions: {

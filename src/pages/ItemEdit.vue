@@ -8,7 +8,6 @@ main-layout
     todo-form(
       @discard="goBack",
       @save="editTodo",
-      :todo="todo"
     )
       template(v-slot:custom-fields)
         input(
@@ -28,14 +27,17 @@ export default {
     MainLayout,
     TodoForm,
   },
-  data() {
-    return {
-      todo: { ...this.$store.getters.todoById(this.$route.params.id) }
-    }
+  beforeCreate() {
+    this.$store.commit('setCurrent', { todoId: this.$route.params.id })
+  },
+  computed: {
+    todo() {
+      return this.$store.getters.currentTodo()
+    },
   },
   methods: {
-    editTodo() {
-      this.$store.commit('updateTodo', this.todo)
+    editTodo(todo) {
+      this.$store.commit('updateTodo', todo)
       this.$router.push('/')
     },
     deleteItem() {

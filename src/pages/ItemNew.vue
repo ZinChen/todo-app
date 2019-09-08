@@ -3,48 +3,26 @@ main-layout
   template(v-slot:body)
     todo-form(
       @discard="goBack",
-      @save="editTodo",
-      :todo="todo"
+      @save="createTodo"
     )
 </template>
 
 <script>
-import { timehash } from '../common/lib'
 import MainLayout from './MainLayout.vue'
 import TodoForm from '../components/TodoForm.vue'
 
-const emptyTodo = {
-  scheduled: false,
-  title: '',
-  description: ''
-}
-
 export default {
   name: 'new-item',
-  data() {
-    return {
-      todo: emptyTodo
-    }
-  },
   components: {
     MainLayout,
     TodoForm,
   },
+  beforeCreate() {
+    this.$store.commit('setCurrent', { todoId: null })
+  },
   methods: {
-
-    createTodo() {
-      const {
-        title,
-        description
-      } = this.todo
-
-      this.$store.commit('addTodo', {
-        // id: timehash(),
-        title,
-        description
-      })
-      console.log('store', this.$store.state)
-      this.todo = emptyTodo
+    createTodo(todo) {
+      this.$store.commit('addTodo', todo)
       this.$router.push('/')
     },
 

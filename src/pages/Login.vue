@@ -28,7 +28,6 @@ export default {
   methods: {
     loginWithFacebook() {
       const provider = new firebase.auth.FacebookAuthProvider()
-
       this.auth.handleFirebaseAuth(provider)
     },
     loginWithGoogle() {

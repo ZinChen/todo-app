@@ -1,20 +1,38 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { firestoreAction, vuexfireMutations } from 'vuexfire'
+import { initialTodo } from '../common/lib'
 
 Vue.use(Vuex)
+
+const updateCurrentTodo = ({
+  commit,
+  state,
+  getters,
+}) => {
+  const {
+    todoId,
+    subTodo,
+  } = state.current
+  const todo = getters.todoById(todoId) || subTodo || initialTodo
+
+  commit('setCurrent', { todo, subTodo: undefined })
+}
 
 export default new Vuex.Store({
   state: {
     todos: [],
     user: null,
+    current: {}
   },
   mutations: {
     ...vuexfireMutations,
-    addTodo(state, todo) {
+    addTodo(state) {
+      const { todo } = state.current
       state.todosRef.add(todo)
     },
-    updateTodo(state, todo) {
+    updateTodo(state) {
+      const { todo } = state.current
       state.todosRef.doc(todo.id).update(todo)
     },
     deleteTodo(state, id) {
@@ -25,27 +43,33 @@ export default new Vuex.Store({
     },
     setCurrent(state, prop) {
       state.current = Object.assign({}, state.current, prop)
+    },
+    setTodoListStatus(state, status) {
+      state.todoListStatus = status
     }
   },
   getters: {
     todoById: state => id => {
-      return state.todos.find((todo) => todo.id === id)
+      return id && state.todos.find((todo) => todo.id === id)
     },
-    currentTodo: (state, getters) => () => {
-      const id = (state.current || {}).todoId
-      return id ?
-        getters.todoById(id)
-        : {
-          type: 'simple'
-        }
+    currentTodo: state => () => {
+      return state.current.todo
     }
   },
   actions: {
     setTodosRef({ commit }, ref) {
       commit('setTodosRef', ref)
     },
-    bindFirestoreRef: firestoreAction(({ bindFirestoreRef }, ref) => {
-      bindFirestoreRef('todos', ref)
-    })
+    setCurrentTodo({ commit, getters, state }, id) {
+      updateCurrentTodo({ commit, state, getters })
+    },
+    bindFirestoreRef: firestoreAction(({ bindFirestoreRef, commit, getters, state }, ref) => {
+      bindFirestoreRef('todos', ref).then(data => {
+        updateCurrentTodo({ commit, state, getters })
+      })
+    }),
+    setTodoListStatus({ commit }, status) {
+      commit('setTodoListStatus', status)
+    }
   }
 })

@@ -30,7 +30,8 @@ export default {
     TodoForm,
   },
   beforeCreate() {
-    this.$store.commit('setCurrent', { todoId: this.$route.params.id })
+    this.$store.commit('setCurrent', { todoId: this.$route.params.todoId })
+    this.$store.state.todoListStatus == 'loaded' && this.$store.dispatch('setCurrentTodo')
   },
   computed: {
     todo() {
@@ -38,12 +39,12 @@ export default {
     },
   },
   methods: {
-    editTodo(todo) {
-      this.$store.commit('updateTodo', todo)
+    editTodo() {
+      this.$store.commit('updateTodo')
       this.$router.push('/todo')
     },
     deleteItem() {
-      this.$store.commit('deleteTodo', this.todo.id)
+      this.$store.commit('deleteTodo', this.$route.params.todoId)
       this.$router.push('/todo')
     },
     goBack() {

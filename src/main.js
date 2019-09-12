@@ -19,7 +19,7 @@ let routes = [
   { path: '/todo', component: Todo },
   { path: '/new', component: ItemNew },
   { path: '/login', component: Login },
-  { path: '/todo/:id', component: ItemEdit },
+  { path: '/todo/:todoId', component: ItemEdit },
 ]
 
 let router = new Router({
@@ -48,8 +48,15 @@ new Vue({
       if (!user) {
         return
       }
-      const ref = firebaseApp.firestore().collection('users').doc(user.uid).collection('todos')
-      this.$store.dispatch('setTodosRef', ref)
+      const ref = firebaseApp.firestore()
+        .collection('users')
+        .doc(user.uid)
+        .collection('todos')
+       ref.get()
+        .then((snap) => {
+          this.$store.dispatch('setTodoListStatus', 'loaded')
+          this.$store.dispatch('setTodosRef', ref)
+        })
       this.$store.dispatch('bindFirestoreRef', ref)
     })
   },

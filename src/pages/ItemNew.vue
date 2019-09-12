@@ -10,6 +10,7 @@ main-layout
 <script>
 import MainLayout from './MainLayout.vue'
 import TodoForm from '../components/TodoForm.vue'
+import { initialTodo } from '../common/lib'
 
 export default {
   name: 'new-item',
@@ -18,11 +19,12 @@ export default {
     TodoForm,
   },
   beforeCreate() {
-    this.$store.commit('setCurrent', { todoId: null })
+    this.$store.commit('setCurrent', { todoId: undefined })
+    this.$store.state.todoListStatus == 'loaded' && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
-    createTodo(todo) {
-      this.$store.commit('addTodo', todo)
+    createTodo() {
+      this.$store.commit('addTodo')
       this.$router.push('/todo')
     },
 

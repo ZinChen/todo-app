@@ -6,7 +6,6 @@
         v-for="day in days"
         :value="day"
         v-model="schedule"
-        @change="updateSchedule"
       )
     .row
     | {{ schedule }}
@@ -15,7 +14,6 @@
 <script>
 export default {
   name: 'todo-weekdays',
-  props: ['todo'],
   data() {
     return {
       days: [
@@ -27,12 +25,20 @@ export default {
         'Sat',
         'Sun'
       ],
-      schedule: this.todo.schedule || []
     }
   },
-  methods: {
-    updateSchedule() {
-      this.$emit('updateSchedule', this.schedule)
+  computed: {
+    todo() {
+      return this.$store.getters.currentTodo()
+    },
+    schedule: {
+      get: function() {
+        return (this.todo || {}).schedule || []
+      },
+      set: function(value) {
+        this.todo.schedule = value
+        this.$store.commit('setCurrent', { todo: this.todo })
+      }
     }
   }
 }

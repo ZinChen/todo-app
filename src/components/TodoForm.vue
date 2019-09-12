@@ -50,13 +50,15 @@
         .field.schedule-container(
           v-if="todo.type == 'scheduled'"
         ) Schedule
-          todo-weekdays(
-            :todo="todo"
-            @updateSchedule="updateSchedule"
-          )
-        .field.task-add-subtask(
+          todo-weekdays
+        .field.task-add-subtodo(
           v-if="!isNew && todo.type != 'scheduled'"
-        ) Add subtask here
+        ) Add subtodo here, this will turn this simple todo to epic
+          input.button(
+            type="button"
+            @click="addSubtodo"
+            value="Add subtodo"
+          )
         slot(name="controls")
           .field.is-grouped
             .control
@@ -76,6 +78,7 @@
 <script>
 import { mapState } from 'vuex'
 import TodoWeekdays from './TodoWeekdays.vue'
+import { initialTodo } from '../common/lib'
 
 export default {
   name: 'todo-form',
@@ -100,16 +103,23 @@ export default {
   },
   methods: {
     discard() {
-      this.$emit('discard', this.todo)
+      this.$emit('discard')
     },
     save() {
-      this.$emit('save', this.todo)
+      this.$emit('save')
     },
     scheduledCheckbox() {
       this.todo.type = this.scheduled ? 'scheduled' : 'simple'
     },
-    updateSchedule(schedule) {
-      this.todo.schedule = schedule
+    addSubtodo() {
+      this.todo.type = 'epic'
+      this.$store.commit('updateTodo')
+      const subTodo = {
+        ...initialTodo,
+        parentTodoId: this.todo.id
+      }
+      this.$store.commit('setCurrent', { subTodo })
+      this.$router.push('/new')
     }
   }
 }

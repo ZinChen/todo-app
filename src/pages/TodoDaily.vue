@@ -8,6 +8,13 @@ main-layout
         v-bind:todo="todo"
       )
 
+    .field
+      input.button.is-link.is-fullwidth(
+        type="button"
+        value="Todo Manager"
+        @click="$router.push('/')"
+      )
+
     //- replace create task with add from existing or create screen
     .create-task-c
       .create-task.task(
@@ -23,7 +30,7 @@ import TodoItem from '../components/TodoItem.vue'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'main-page',
+  name: 'todo-daily',
   components: {
     MainLayout,
     TodoItem,

@@ -2,19 +2,25 @@
   .todo-form
     slot(name="fields", v-if="todo")
       .task-icon.icon
-        i.ion-calendar(v-if="this.todo.type == 'scheduled'")
+        i.ion-calendar(v-if="todo.type == 'scheduled'")
         i.ion-android-time(v-else)
       .task-content
-        .task-title-label Title
         slot(name="custom-fields")
-        input.task-title-info(
-          v-model="todo.title"
-        )
-        .task-description-label Description
-        input.task-description-info(
-          v-model="todo.description"
-        )
-        .task-parent-label Parent task
+        .field
+          label.label.task-title-label Title
+          .control
+            input.input.task-title-info(
+              type="text"
+              v-model="todo.title"
+            )
+        .field
+          label.label.task-description-label Description
+          .control
+            input.input.task-description-info(
+              type="text"
+              v-model="todo.description"
+            )
+        //- .task-parent-label Parent task
         //- select.task-parent(
         //-   v-model="todo.parentTodo"
         //- )
@@ -22,45 +28,49 @@
         //-     v-for="todo in todos"
         //-     :value="todo.id"
         //-   ) {{ todo.title }}
-        .task-scheduled-lable Scheduled
-        input.task-scheduled(
-          type="checkbox"
-          @change="scheduledCheckbox"
-          v-model="scheduled"
+        .field(
+          v-if="isNew"
         )
-        .form-group(
-          v-if="this.todo.type == 'simple'"
+          label.checkbox.task-scheduled-lable
+            input.task-scheduled(
+              type="checkbox"
+              @change="scheduledCheckbox"
+              v-model="scheduled"
+            )
+            |  Scheduled
+        .field(
+          v-if="todo.type == 'simple'"
         )
-          .task-date-label Planned on
-          input.task-date(
-            type="date"
-            v-model="todo.datePlanned"
-          )
-          .scheduled-checkbox-container(
-            v-if="this.isNew"
-          )
-        .schedule-container(
-          v-if="this.todo.type == 'scheduled'"
+          label.label.task-date-label Planned on
+          .control
+            input.input.task-date(
+              type="date"
+              v-model="todo.datePlanned"
+            )
+        .field.schedule-container(
+          v-if="todo.type == 'scheduled'"
         ) Schedule
           todo-weekdays(
             :todo="todo"
             @updateSchedule="updateSchedule"
           )
-        .task-add-subtask(
-          v-if="!this.isNew && this.todo.type != 'scheduled'"
+        .field.task-add-subtask(
+          v-if="!isNew && todo.type != 'scheduled'"
         ) Add subtask here
-    slot(name="controls")
-      .control
-        input(
-          type="button"
-          value="Discard"
-          @click="discard"
-        )
-        input(
-          type="button"
-          value="Save"
-          @click="save"
-        )
+        slot(name="controls")
+          .field.is-grouped
+            .control
+              input.button.is-link(
+                type="button"
+                value="Save"
+                @click="save"
+              )
+            .control
+              input.button.is-text(
+                type="button"
+                value="Discard"
+                @click="discard"
+              )
 </template>
 
 <script>

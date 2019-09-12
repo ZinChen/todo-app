@@ -23,11 +23,11 @@ export default {
   methods: {
     createTodo(todo) {
       this.$store.commit('addTodo', todo)
-      this.$router.push('/')
+      this.$router.push('/todo')
     },
 
     goBack() {
-      this.$router.push('/')
+      this.$router.push('/todo')
     }
   }
 }

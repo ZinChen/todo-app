@@ -24,7 +24,8 @@ export default {
         'Wed',
         'Thur',
         'Fri',
-        'Sat'
+        'Sat',
+        'Sun'
       ],
       schedule: this.todo.schedule || []
     }

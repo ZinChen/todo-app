@@ -10,11 +10,13 @@ main-layout
       @save="editTodo",
     )
       template(v-slot:custom-fields)
-        input(
-          type="button"
-          value="Delete"
-          @click="deleteItem"
-        )
+        .level-right
+          .field.level-item
+            input.button.is-link.is-pulled-right(
+              type="button"
+              value="Delete"
+              @click="deleteItem"
+            )
 </template>
 
 <script>
@@ -38,14 +40,14 @@ export default {
   methods: {
     editTodo(todo) {
       this.$store.commit('updateTodo', todo)
-      this.$router.push('/')
+      this.$router.push('/todo')
     },
     deleteItem() {
       this.$store.commit('deleteTodo', this.todo.id)
-      this.$router.push('/')
+      this.$router.push('/todo')
     },
     goBack() {
-      this.$router.push('/')
+      this.$router.push('/todo')
     },
   }
 }

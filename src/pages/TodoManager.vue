@@ -1,18 +1,32 @@
 <template lang="pug">
   main-layout
+    template(v-slot:header)
+      input.button.is-link.is-fullwidth(
+        type="button"
+        value="Todo Today"
+        @click="$router.push('/todo')"
+      )
+
     template(v-slot:body)
       todo-item(
         v-for="todo in masterTodos"
       )
-      //- add todo button
+      .comments
+        | add todo button
 
-      //- may be two tabs:
+        | may be two tabs:
 
 </template>
 
 <script>
+import MainLayout from './MainLayout.vue'
+import TodoItem from '../components/TodoItem.vue'
+
 export default {
-  name: 'task-manager',
+  name: 'todo-manager',
+  components: {
+    MainLayout
+  },
   data() {
     return {
 

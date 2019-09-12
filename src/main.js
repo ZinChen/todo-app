@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import store from './store'
 import firebase from 'firebase'
 import App from './App.vue'
-import Main from './pages/Main.vue'
+import TodoManager from './pages/TodoManager.vue'
+import Todo from './pages/TodoDaily.vue'
 import ItemNew from './pages/ItemNew.vue'
 import ItemEdit from './pages/ItemEdit.vue'
 import Login from './pages/Login.vue'
@@ -14,7 +15,8 @@ Vue.config.productionTip = false
 Vue.use(Router)
 
 let routes = [
-  { path: '/', component: Main },
+  { path: '/', component: TodoManager },
+  { path: '/todo', component: Todo },
   { path: '/new', component: ItemNew },
   { path: '/login', component: Login },
   { path: '/todo/:id', component: ItemEdit },

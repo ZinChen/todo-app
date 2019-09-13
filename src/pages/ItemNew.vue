@@ -20,7 +20,7 @@ export default {
   },
   beforeCreate() {
     this.$store.commit('setCurrent', { todoId: undefined })
-    this.$store.state.todoListStatus == 'loaded' && this.$store.dispatch('setCurrentTodo')
+    this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
     createTodo() {

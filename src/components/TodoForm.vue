@@ -29,7 +29,7 @@
         //-     :value="todo.id"
         //-   ) {{ todo.title }}
         .field(
-          v-if="isNew"
+          v-if="isNew && !isSubTodo"
         )
           label.checkbox.task-scheduled-lable
             input.task-scheduled(
@@ -51,14 +51,28 @@
           v-if="todo.type == 'scheduled'"
         ) Schedule
           todo-weekdays
-        .field.task-add-subtodo(
-          v-if="!isNew && todo.type != 'scheduled'"
-        ) Add subtodo here, this will turn this simple todo to epic
+        .field(
+          v-if="isEpic"
+        )
+          .subtodos-title Todo
+          .todo-item(
+            v-for="todo in subTodos"
+          )
+            //- Show here task status, time planned/done, link to todo (show in subtask info about parent task -> if has parent, show info)
+            .todo
+              | {{ todo.title }}
+        .field(
+          v-if="isNotScheduleOld"
+        )
           input.button(
             type="button"
             @click="addSubtodo"
             value="Add subtodo"
           )
+        //- add button
+        .field.task-add-subtodo(
+          v-if="isSimpleOld"
+        ) Add subtodo here, this will turn this simple todo to epic
         slot(name="controls")
           .field.is-grouped
             .control
@@ -94,12 +108,24 @@ export default {
     todo() {
       return this.$store.getters.currentTodo()
     },
+    subTodos() {
+      return this.$store.getters.subTodos(this.todo.id)
+    },
     isNew() {
       return !this.todo.id
     },
-    ...mapState([
-      'todos'
-    ])
+    isSubTodo() {
+      return (this.todo || {}).parentTodoId !== undefined
+    },
+    isEpic() {
+      return this.todo.type == 'epic'
+    },
+    isSimpleOld() {
+      return !this.isNew && this.todo.type == 'simple'
+    },
+    isNotScheduleOld() {
+      return !this.isNew && this.todo.type != 'schedule'
+    }
   },
   methods: {
     discard() {
@@ -124,3 +150,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  @import '../styles/todo-item';
+</style>

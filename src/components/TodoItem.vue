@@ -1,19 +1,19 @@
 <template lang="pug">
-  .task(
+  .todo(
     @click="openItem"
   )
-    .task-icon.icon
+    .todo-icon.icon
       i.ion-calendar(v-if="todo.scheduled")
       i.ion-android-time(v-else)
-    .task-checkbox
+    .todo-checkbox
       input(
         :id="idAttr",
         :name="todo.id"
         type="checkbox",
       )
-    .task-content
-      .task-title {{ todo.title }}
-      .task-description {{ todo.description }}
+    .todo-content
+      .todo-title {{ todo.title }}
+      .todo-description {{ todo.description }}
 </template>
 
 

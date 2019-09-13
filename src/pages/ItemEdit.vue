@@ -31,7 +31,7 @@ export default {
   },
   beforeCreate() {
     this.$store.commit('setCurrent', { todoId: this.$route.params.todoId })
-    this.$store.state.todoListStatus == 'loaded' && this.$store.dispatch('setCurrentTodo')
+    this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
   computed: {
     todo() {

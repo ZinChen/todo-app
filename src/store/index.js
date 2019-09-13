@@ -49,12 +49,18 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    isTodosLoaded: state => () => {
+      state.todoListStatus == 'loaded'
+    },
     todoById: state => id => {
       return id && state.todos.find((todo) => todo.id === id)
     },
+    subTodos: state => parentId => {
+      return state.todos.filter((todo) => todo.parentTodoId === parentId)
+    },
     currentTodo: state => () => {
       return state.current.todo
-    }
+    },
   },
   actions: {
     setTodosRef({ commit }, ref) {
@@ -64,9 +70,10 @@ export default new Vuex.Store({
       updateCurrentTodo({ commit, state, getters })
     },
     bindFirestoreRef: firestoreAction(({ bindFirestoreRef, commit, getters, state }, ref) => {
-      bindFirestoreRef('todos', ref).then(data => {
-        updateCurrentTodo({ commit, state, getters })
-      })
+      bindFirestoreRef('todos', ref)
+        .then(data => {
+          updateCurrentTodo({ commit, state, getters })
+        })
     }),
     setTodoListStatus({ commit }, status) {
       commit('setTodoListStatus', status)

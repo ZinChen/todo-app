@@ -1,4 +1,4 @@
-@mixin task-frame {
+@mixin todo-frame {
   position: relative;
   display: flex;
   align-items: center;
@@ -9,25 +9,25 @@
   line-height: 1.2;
 }
 
-.task {
-  @include task-frame;
+.todo {
+  @include todo-frame;
 
   height: 55px;
   cursor: pointer;
 }
 
-.task-new {
-  @include task-frame;
+.todo-new {
+  @include todo-frame;
 
   flex-direction: column;
 }
 
-.task-checkbox {
+.todo-checkbox {
   margin-left: 5px;
   margin-right: 5px;
 }
 
-.task-icon {
+.todo-icon {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -35,11 +35,11 @@
   height: .5rem;
 }
 
-.task-title {
+.todo-title {
   font-weight: 500;
   font-size: 16px;
 }
 
-.task-description {
+.todo-description {
   font-size: 12px;
 }

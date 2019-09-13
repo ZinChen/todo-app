@@ -41,6 +41,8 @@ export default {
     }
   },
   computed: {
+    // todos - only simple
+    // check and create simple todos for schedule for current day
     ...mapState([
       'todos'
     ])

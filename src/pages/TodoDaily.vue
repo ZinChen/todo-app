@@ -1,7 +1,7 @@
 <template lang="pug">
 main-layout
   template(v-slot:body)
-    .task-c
+    .todo-c
       todo-item(
         v-for="todo in todos",
         :key="todo.id"
@@ -15,12 +15,12 @@ main-layout
         @click="$router.push('/')"
       )
 
-    //- replace create task with add from existing or create screen
-    .create-task-c
-      .create-task.task(
-        @click="openNewTask"
+    //- replace create todo with add from existing or create screen
+    .create-todo-c
+      .create-todo.todo(
+        @click="openNewtodo"
       )
-        .create-task-icon.icon.icon-is-medium
+        .create-todo-icon.icon.icon-is-medium
           i.ion-plus-round
 </template>
 
@@ -36,33 +36,36 @@ export default {
     TodoItem,
   },
   methods: {
-    openNewTask() {
+    openNewtodo() {
       this.$router.push('/new')
     }
   },
   computed: {
     // todos - only simple
     // check and create simple todos for schedule for current day
-    ...mapState([
-      'todos'
-    ])
+    // ...mapState([
+    //   'todos'
+    // ])
+    todos() {
+      return this.$store.getters.dailyTodos()
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.task-c {
+.todo-c {
   flex: 1;
 }
 
-.create-task {
+.create-todo {
   display: flex;
   // justify-content: flex-end;
   justify-content: center;
   cursor: pointer;
 }
 
-.create-task-icon {
+.create-todo-icon {
   // margin-right: 10px;
   line-height: 1;
   color: #fff;

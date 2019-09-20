@@ -18,6 +18,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import '../styles/main-layout';
+  @import '../styles/todo-item';
 </style>

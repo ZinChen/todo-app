@@ -8,6 +8,7 @@ import Todo from './pages/TodoDaily.vue'
 import ItemNew from './pages/ItemNew.vue'
 import ItemEdit from './pages/ItemEdit.vue'
 import Login from './pages/Login.vue'
+import Special from './pages/Special.vue'
 
 require('./styles/main.scss')
 
@@ -20,6 +21,7 @@ let routes = [
   { path: '/new', component: ItemNew },
   { path: '/login', component: Login },
   { path: '/todo/:todoId', component: ItemEdit },
+  { path: '/special', component: Special }
 ]
 
 let router = new Router({
@@ -57,6 +59,7 @@ new Vue({
           this.$store.dispatch('setTodoListStatus', 'loaded')
           this.$store.dispatch('setTodosRef', ref)
         })
+      window.testRef = ref //test purpose
       this.$store.dispatch('bindFirestoreRef', ref)
     })
   },

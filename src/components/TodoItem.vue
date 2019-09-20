@@ -1,6 +1,7 @@
 <template lang="pug">
-  .todo(
+  router-link.todo(
     @click="openItem"
+    :to="`/todo/${todo.id}`"
   )
     .todo-icon.icon
       i.ion-calendar(v-if="todo.scheduled")
@@ -33,8 +34,3 @@ export default {
   }
 }
 </script>
-
-
-<style lang="scss" scoped>
-  @import '../styles/todo-item';
-</style>

@@ -10,6 +10,8 @@
     template(v-slot:body)
       todo-item(
         v-for="todo in masterTodos"
+        :key="todo.id"
+        v-bind:todo="todo"
       )
       .comments
         | add todo button
@@ -25,7 +27,8 @@ import TodoItem from '../components/TodoItem.vue'
 export default {
   name: 'todo-manager',
   components: {
-    MainLayout
+    MainLayout,
+    TodoItem
   },
   data() {
     return {
@@ -34,6 +37,7 @@ export default {
   },
   computed: {
     masterTodos() {
+      return this.$store.getters.masterTodos()
       // simple not done todos and master todo for schedule and epic(история)
     },
     doneTodos() {

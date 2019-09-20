@@ -5,18 +5,7 @@ main-layout
       @click="goBack"
     ) Back
   template(v-slot:body)
-    todo-form(
-      @discard="goBack",
-      @save="editTodo",
-    )
-      template(v-slot:custom-fields)
-        .level-right
-          .field.level-item
-            input.button.is-link.is-pulled-right(
-              type="button"
-              value="Delete"
-              @click="deleteItem"
-            )
+    todo-form
 </template>
 
 <script>
@@ -33,22 +22,10 @@ export default {
     this.$store.commit('setCurrent', { todoId: this.$route.params.todoId })
     this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
-  computed: {
-    todo() {
-      return this.$store.getters.currentTodo()
-    },
-  },
   methods: {
-    editTodo() {
-      this.$store.commit('updateTodo')
-      this.$router.push('/todo')
-    },
-    deleteItem() {
-      this.$store.commit('deleteTodo', this.$route.params.todoId)
-      this.$router.push('/todo')
-    },
     goBack() {
-      this.$router.push('/todo')
+      // this.$router.push('/todo')
+      this.$router.go(-1)
     },
   }
 }

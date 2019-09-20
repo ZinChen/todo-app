@@ -1,10 +1,7 @@
 <template lang="pug">
 main-layout
   template(v-slot:body)
-    todo-form(
-      @discard="goBack",
-      @save="createTodo"
-    )
+    todo-form
 </template>
 
 <script>
@@ -23,11 +20,6 @@ export default {
     this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
-    createTodo() {
-      this.$store.commit('addTodo')
-      this.$router.push('/todo')
-    },
-
     goBack() {
       this.$router.push('/todo')
     }

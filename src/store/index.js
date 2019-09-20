@@ -46,6 +46,19 @@ export default new Vuex.Store({
     },
     setTodoListStatus(state, status) {
       state.todoListStatus = status
+    },
+    deleteAllTodos(state) {
+      (state.todos || []).forEach(todo => {
+        state.todosRef.doc(todo.id).delete()
+      })
+
+      const current = {
+        todo: undefined,
+        todoId: undefined,
+        subTodo: undefined,
+      }
+
+      state.current = Object.assign({}, state.current, current)
     }
   },
   getters: {
@@ -61,6 +74,12 @@ export default new Vuex.Store({
     currentTodo: state => () => {
       return state.current.todo
     },
+    masterTodos: state => () => {
+      return state.todos.filter((todo) => ['epic', 'schedule'].includes(todo.type) && !todo.parentTodoId)
+    },
+    dailyTodos: state => () => {
+      return state.todos.filter((todo) => todo.type == 'simple')
+    }
   },
   actions: {
     setTodosRef({ commit }, ref) {

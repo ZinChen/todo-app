@@ -6,6 +6,7 @@ import App from './App.vue'
 import TodoManager from './pages/TodoManager.vue'
 import Todo from './pages/TodoDaily.vue'
 import ItemNew from './pages/ItemNew.vue'
+import ItemView from './pages/ItemView.vue'
 import ItemEdit from './pages/ItemEdit.vue'
 import Login from './pages/Login.vue'
 import Special from './pages/Special.vue'
@@ -20,7 +21,8 @@ let routes = [
   { path: '/todo', component: Todo },
   { path: '/new', component: ItemNew },
   { path: '/login', component: Login },
-  { path: '/todo/:todoId', component: ItemEdit },
+  { path: '/todo/:todoId', component: ItemView },
+  { path: '/todo/:todoId/edit', component: ItemEdit },
   { path: '/special', component: Special }
 ]
 
@@ -54,7 +56,7 @@ new Vue({
         .collection('users')
         .doc(user.uid)
         .collection('todos')
-       ref.get()
+      ref.get()
         .then((snap) => {
           this.$store.dispatch('setTodoListStatus', 'loaded')
           this.$store.dispatch('setTodosRef', ref)

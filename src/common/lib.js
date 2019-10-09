@@ -1,13 +1,11 @@
 export const timehash = () =>
   (+new Date).toString(36);
 
-const initalTodoTemplate = () => ({
+export const initialTodoTemplate = () => ({
   type: 'simple',
   status: 'planned',
   created: Date.now()
 })
-
-export const initialTodo = initalTodoTemplate()
 
 export const saveFile = (value, name = 'todo-app-export') => {
   const data = JSON.stringify(value)

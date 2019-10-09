@@ -11,6 +11,7 @@ main-layout
 <script>
 import MainLayout from './MainLayout.vue'
 import TodoForm from '../components/TodoForm.vue'
+import { TODO_MODE } from '../common/constants'
 
 export default {
   name: 'edit-todo',
@@ -19,7 +20,10 @@ export default {
     TodoForm,
   },
   beforeCreate() {
-    this.$store.commit('setCurrent', { todoId: this.$route.params.todoId })
+    this.$store.commit('setCurrent', {
+      todoId: this.$route.params.todoId,
+      todoMode: TODO_MODE.EDIT
+    })
     this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
   methods: {

@@ -23,16 +23,15 @@ export default {
   components: { MainLayout },
   methods: {
     deleteAllTodos() {
-      confirm('Удалить все задачи? Точно?!')
-        && this.downloadAllTodos()
-        && this.$store.commit('deleteAllTodos')
+      if(confirm('Удалить все задачи? Точно?!')) {
+        this.$store.dispatch('deleteAllTodos')
+      }
     },
     downloadAllTodos() {
       this.$store.state.todosRef.get()
         .then(snap => {
           const result = {}
           snap.docs.map(doc => result[doc.id] = doc.data())
-          console.table('result', result)
           const date = new Date()
           saveFile(result, 'todos ' + date.toJSON())
         })

@@ -4,8 +4,9 @@
       input(
         type="checkbox"
         v-for="day in days"
-        :value="day"
         v-model="schedule"
+        :value="day"
+        :disabled="todo.mode != 'edit'"
       )
     .row
     | {{ schedule }}

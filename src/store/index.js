@@ -1,20 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { firestoreAction, vuexfireMutations } from 'vuexfire'
-import { initialTodo } from '../common/lib'
+import { initialTodoTemplate } from '../common/lib'
+import { TODO_TYPE } from '../common/constants'
 
 Vue.use(Vuex)
 
-const updateCurrentTodo = ({
+const setCurrentTodo = ({
   commit,
   state,
   getters,
 }) => {
   const {
-    todoId,
     subTodo,
+    todoId,
   } = state.current
-  const todo = getters.todoById(todoId) || subTodo || initialTodo
+  const todo = (todoId && getters.todoById(todoId)) || subTodo || initialTodoTemplate()
 
   commit('setCurrent', { todo, subTodo: undefined })
 }
@@ -31,8 +32,7 @@ export default new Vuex.Store({
       const { todo } = state.current
       state.todosRef.add(todo)
     },
-    updateTodo(state) {
-      const { todo } = state.current
+    updateTodo(state, todo) {
       state.todosRef.doc(todo.id).update(todo)
     },
     deleteTodo(state, id) {
@@ -47,19 +47,6 @@ export default new Vuex.Store({
     setTodoListStatus(state, status) {
       state.todoListStatus = status
     },
-    deleteAllTodos(state) {
-      (state.todos || []).forEach(todo => {
-        state.todosRef.doc(todo.id).delete()
-      })
-
-      const current = {
-        todo: undefined,
-        todoId: undefined,
-        subTodo: undefined,
-      }
-
-      state.current = Object.assign({}, state.current, current)
-    }
   },
   getters: {
     isTodosLoaded: state => () => {
@@ -75,27 +62,76 @@ export default new Vuex.Store({
       return state.current.todo
     },
     masterTodos: state => () => {
-      return state.todos.filter((todo) => ['epic', 'schedule'].includes(todo.type) && !todo.parentTodoId)
+      return state.todos.filter((todo) =>
+        [TODO_TYPE.EPIC, TODO_TYPE.SCHEDULED].includes(todo.type)
+        && !todo.parentTodoId
+      )
     },
     dailyTodos: state => () => {
-      return state.todos.filter((todo) => todo.type == 'simple')
+      return state.todos.filter((todo) =>
+        todo.type == TODO_TYPE.SIMPLE
+      )
     }
   },
   actions: {
-    setTodosRef({ commit }, ref) {
-      commit('setTodosRef', ref)
-    },
-    setCurrentTodo({ commit, getters, state }, id) {
-      updateCurrentTodo({ commit, state, getters })
-    },
     bindFirestoreRef: firestoreAction(({ bindFirestoreRef, commit, getters, state }, ref) => {
       bindFirestoreRef('todos', ref)
         .then(data => {
-          updateCurrentTodo({ commit, state, getters })
+          setCurrentTodo({ commit, state, getters })
         })
     }),
+
+    setTodosRef({ commit }, ref) {
+      commit('setTodosRef', ref)
+    },
+
+    setCurrentTodo({ commit, getters, state }) {
+      setCurrentTodo({ commit, state, getters })
+    },
+
+    addTodo({ commit }) {
+      commit('addTodo')
+    },
+
+    updateTodo({ commit, state }, todo) {
+      if (!todo) {
+        todo = state.current.todo
+      }
+      this.commit('updateTodo', todo)
+
+      if (state.current.todo.id == todo.id) {
+        commit('setCurrent', { todo })
+      }
+    },
+
+    addSubAndSetParentTodo({ commit, state }) {
+      const {
+        parentTodo
+      } = state.current
+
+      if (parentTodo.type != TODO_TYPE.EPIC) {
+        parentTodo.type = TODO_TYPE.EPIC
+        commit('updateTodo', parentTodo)
+      }
+
+      commit('addTodo')
+    },
+
     setTodoListStatus({ commit }, status) {
       commit('setTodoListStatus', status)
+    },
+
+    deleteAllTodos({ commit, state }) {
+      (state.todos || []).forEach(todo => {
+        console.log('delete todo', todo)
+        state.todosRef.doc(todo.id).delete()
+      })
+
+      const current = {
+        todo: undefined,
+      }
+
+      commit('setCurrent', current)
     }
   }
 })

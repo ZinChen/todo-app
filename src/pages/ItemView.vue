@@ -1,5 +1,9 @@
 <template lang="pug">
 main-layout
+  template(v-slot:header)
+    .pointer(
+      @click="goBack"
+    ) Back
   template(v-slot:body)
     todo-form
 </template>
@@ -7,31 +11,25 @@ main-layout
 <script>
 import MainLayout from './MainLayout.vue'
 import TodoForm from '../components/TodoForm.vue'
-import { initialTodoTemplate } from '../common/lib'
 import { TODO_MODE } from '../common/constants'
 
 export default {
-  name: 'new-item',
+  name: 'item-view',
   components: {
     MainLayout,
     TodoForm,
   },
   beforeCreate() {
     this.$store.commit('setCurrent', {
-      todoId: undefined,
-      todoMode: TODO_MODE.EDIT
+      todoId: this.$route.params.todoId,
+      todoMode: TODO_MODE.VIEW,
     })
     this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
     goBack() {
-      this.$router.push('/todo')
-    }
+      this.$router.go(-1)
+    },
   }
 }
 </script>
-
-<style lang="scss">
-
-
-</style>

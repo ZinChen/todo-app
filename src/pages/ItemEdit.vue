@@ -28,8 +28,7 @@ export default {
   },
   methods: {
     goBack() {
-      // this.$router.push('/todo')
-      this.$router.go(-1)
+      this.$router.push(`/todo/${this.$route.params.todoId}`)
     },
   }
 }

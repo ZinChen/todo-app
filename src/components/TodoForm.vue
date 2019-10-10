@@ -54,6 +54,43 @@
           label Status
           .status
           | {{ todo.status }}
+
+        .field.type-container(
+          v-if="isViewMode"
+        )
+          .buttons.has-addons
+            button(
+              class="button is-primary"
+              :class="{ 'is-active': todo.type == TODO_TYPE.SIMPLE }"
+              :disabled="todo.type == TODO_TYPE.SIMPLE"
+              @click="clickType(TODO_TYPE.SIMPLE)"
+            ) Simple
+            button(
+              class="button is-info"
+              :class="{ 'is-active': todo.type == TODO_TYPE.SCHEDULED }"
+              :disabled="todo.type == TODO_TYPE.SCHEDULED"
+              @click="clickType(TODO_TYPE.SCHEDULED)"
+            ) Scheduled
+            button(
+              class="button is-warning"
+              :class="{ 'is-active': todo.type == TODO_TYPE.EPIC }"
+              :disabled="todo.type == TODO_TYPE.EPIC"
+              @click="clickType(TODO_TYPE.EPIC)"
+            ) Epic
+
+          .buttons(
+            v-if="typeState == 'clicked' && originalType != todo.type"
+          )
+            button(
+              class="button is-pulled-right is-link"
+              @click="setType"
+            ) Confirm
+
+            button(
+              class="button is-pulled-right"
+              @click="declineType"
+            ) Decline
+
         .field(
           v-if="isNew && !isSubTodo"
         )
@@ -92,7 +129,7 @@
             .todo
               | {{ todo.title }}
         .field(
-          v-if="isNotScheduledOld"
+          v-if="isEpic && !isNew"
         )
           input.button(
             type="button"
@@ -113,30 +150,33 @@
               v-if="isTodoTime"
             )
               button(
-                class="button"
+                class="button is-success"
                 :class="{ 'is-active': todo.status == TODO_STATUS.DONE }"
                 @click="clickStatus(TODO_STATUS.DONE)"
               ) Done
               button(
-                class="button"
+                class="button is-info"
+                :class="{ 'is-active': todo.status == TODO_STATUS.NOT_FINISHED }"
                 @click="clickStatus(TODO_STATUS.NOT_FINISHED)"
               ) Not finished
               button(
-                class="button"
+                class="button is-danger"
+                :class="{ 'is-active': todo.status == TODO_STATUS.SKIPPED }"
                 @click="clickStatus(TODO_STATUS.SKIPPED)"
               ) Skipped
 
-            button(
-              v-if="status == 'clicked' && originalStatus != todo.status"
-              class="button is-pulled-right is-link"
-              @click="setStatus"
-            ) Confirm
+            .buttons(
+              v-if="statusState == 'clicked' && originalStatus != todo.status"
+            )
+              button(
+                class="button is-pulled-right is-link"
+                @click="setStatus"
+              ) Confirm
 
-            button(
-              v-if="status == 'clicked' && originalStatus != todo.status"
-              class="button is-pulled-right"
-              @click="declineStatus"
-            ) Decline
+              button(
+                class="button is-pulled-right"
+                @click="declineStatus"
+              ) Decline
 
             .buttons.has-addons(
               v-if="isSecondStatusNeed"
@@ -177,8 +217,11 @@ export default {
   data() {
     return {
       originalStatus: undefined,
-      status: undefined,
-      scheduled: false,
+      statusState: undefined,
+      originalType: undefined,
+      typeState: undefined,
+      scheduled: undefined,
+      nothingTodoHere: undefined,
       TODO_MODE,
       TODO_TYPE,
       TODO_STATUS,
@@ -221,14 +264,15 @@ export default {
     isSimpleEdit() {
       return !this.isNew && this.isSimple
     },
-    isNotScheduledOld() {
-      return !this.isNew && !this.isScheduled
-    },
     isTodoTime() {
       return new Date(this.todo.datePlanned) < new Date()
     },
     isSecondStatusNeed() {
-      return this.status == 'confirmed' && [TODO_STATUS.NOT_FINISHED, TODO_STATUS.SKIPPED].includes(this.todo.status)
+      return this.statusState == 'confirmed' && [TODO_STATUS.NOT_FINISHED, TODO_STATUS.SKIPPED].includes(this.todo.status)
+    },
+    isTypeConfirmNeed() {
+      // there is something strange with 'originalType' if you paste it in template, 'undefined' error appears
+      return this.typeState == 'clicked' && this.originaltype != this.todo.type
     }
   },
   methods: {
@@ -273,12 +317,12 @@ export default {
     },
     setStatus() {
       this.$store.dispatch('updateTodo')
-      this.status = 'confirmed'
+      this.statusState = 'confirmed'
     },
     clickStatus(status) {
-      if (this.status != 'clicked') {
+      if (this.statusState != 'clicked') {
         this.originalStatus = this.todo.status
-        this.status = 'clicked'
+        this.statusState = 'clicked'
       }
       this.todo.status = status
 
@@ -288,8 +332,29 @@ export default {
       // skipped -> status 'skipped', create new task or just close this
     },
     declineStatus() {
-      this.status = undefined
+      this.statusState = undefined
       this.todo.status = this.originalStatus
+    },
+    setType() {
+      this.$store.dispatch('updateTodo')
+      this.typeState = 'confirmed'
+    },
+    clickType(type) {
+      if (this.typeState != 'clicked') {
+        this.originalType = this.todo.type
+        this.typeState = 'clicked'
+      }
+
+      const isComplexTosimple = type == TODO_TYPE.SIMPLE && type != this.originalType
+      if (isComplexTosimple && this.hasSubtodo) {
+        alert('You cannot turn complex todo with subtodos to simple, sorry')
+      } else {
+        this.todo.type = type
+      }
+    },
+    declineType() {
+      this.typeState = undefined
+      this.todo.type = this.originalType
     },
     createNextTodo() {
       const initialTodo = initialTodoTemplate()
@@ -322,6 +387,9 @@ export default {
       }
       this.$store.commit('setCurrent', { subTodo, parentTodo: this.todo })
       this.$router.push('/new')
+    },
+    hasSubtodo() {
+      return this.$store.todos.find(todo => todo.parentTodoId == this.todo.id)
     }
   }
 }

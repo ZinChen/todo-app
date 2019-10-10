@@ -18,6 +18,13 @@
 
         | may be two tabs:
 
+      .create-todo-c
+        .create-todo.todo(
+          @click="openNewtodo"
+        )
+          .create-todo-icon.icon.icon-is-medium
+            i.ion-plus-round
+
 </template>
 
 <script>
@@ -42,6 +49,11 @@ export default {
     },
     doneTodos() {
       // done simple, master scheduled or epic todos
+    }
+  },
+  methods: {
+    openNewtodo() {
+      this.$router.push('/new')
     }
   }
 }

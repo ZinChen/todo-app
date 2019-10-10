@@ -16,12 +16,6 @@ main-layout
       )
 
     //- replace create todo with add from existing or create screen
-    .create-todo-c
-      .create-todo.todo(
-        @click="openNewtodo"
-      )
-        .create-todo-icon.icon.icon-is-medium
-          i.ion-plus-round
 </template>
 
 <script>
@@ -35,11 +29,6 @@ export default {
     MainLayout,
     TodoItem,
   },
-  methods: {
-    openNewtodo() {
-      this.$router.push('/new')
-    }
-  },
   computed: {
     // todos - only simple
     // check and create simple todos for schedule for current day
@@ -52,25 +41,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.todo-c {
-  flex: 1;
-}
-
-.create-todo {
-  display: flex;
-  // justify-content: flex-end;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.create-todo-icon {
-  // margin-right: 10px;
-  line-height: 1;
-  color: #fff;
-  background: #00B2FE;
-  // border: 1px solid #00B2FE;
-  border-radius: 50%;
-}
-</style>

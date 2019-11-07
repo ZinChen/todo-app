@@ -24,7 +24,7 @@ export default {
       todoId: this.$route.params.todoId,
       todoMode: TODO_MODE.VIEW,
     })
-    this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
+    this.$store.getters.isTodosLoaded() && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
     goBack() {

@@ -1,9 +1,11 @@
+import { TODO_TYPE, TODO_STATUS } from '../common/constants'
+
 export const timehash = () =>
   (+new Date).toString(36);
 
 export const initialTodoTemplate = () => ({
-  type: 'simple',
-  status: 'planned',
+  type: TODO_TYPE.SIMPLE,
+  status: TODO_STATUS.PLANNED,
   created: Date.now()
 })
 

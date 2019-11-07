@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import store from './store'
 import firebase from 'firebase'
 import App from './App.vue'
@@ -14,7 +14,7 @@ import Special from './pages/Special.vue'
 require('./styles/main.scss')
 
 Vue.config.productionTip = false
-Vue.use(Router)
+Vue.use(VueRouter)
 
 let routes = [
   { path: '/', component: TodoManager },
@@ -26,7 +26,7 @@ let routes = [
   { path: '/special', component: Special }
 ]
 
-let router = new Router({
+let router = new VueRouter({
   mode: 'history',
   routes
 })

@@ -9,6 +9,7 @@
           class="field"
           v-if="!isEditMode"
         )
+          //- disable if edit type
           .control
             button(
               class="button.is-warning"

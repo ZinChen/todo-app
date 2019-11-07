@@ -21,7 +21,7 @@ export default {
       todoId: undefined,
       todoMode: TODO_MODE.EDIT
     })
-    this.$store.getters.isTodosLoaded && this.$store.dispatch('setCurrentTodo')
+    this.$store.getters.isTodosLoaded() && this.$store.dispatch('setCurrentTodo')
   },
   methods: {
     goBack() {

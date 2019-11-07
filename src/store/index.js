@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { firestoreAction, vuexfireMutations } from 'vuexfire'
+import { firestoreAction } from 'vuexfire'
 import { initialTodoTemplate } from '../common/lib'
 import { TODO_TYPE } from '../common/constants'
+import mutations from './mutations'
+import getters from './getters'
 
 Vue.use(Vuex)
 
@@ -26,53 +28,8 @@ export default new Vuex.Store({
     user: null,
     current: {}
   },
-  mutations: {
-    ...vuexfireMutations,
-    addTodo(state) {
-      const { todo } = state.current
-      state.todosRef.add(todo)
-    },
-    updateTodo(state, todo) {
-      state.todosRef.doc(todo.id).update(todo)
-    },
-    deleteTodo(state, id) {
-      state.todosRef.doc(id).delete()
-    },
-    setTodosRef(state, ref) {
-      state.todosRef = ref
-    },
-    setCurrent(state, prop) {
-      state.current = Object.assign({}, state.current, prop)
-    },
-    setTodoListStatus(state, status) {
-      state.todoListStatus = status
-    },
-  },
-  getters: {
-    isTodosLoaded: state => () => {
-      state.todoListStatus == 'loaded'
-    },
-    todoById: state => id => {
-      return id && state.todos.find((todo) => todo.id === id)
-    },
-    subTodos: state => parentId => {
-      return state.todos.filter((todo) => todo.parentTodoId === parentId)
-    },
-    currentTodo: state => () => {
-      return state.current.todo
-    },
-    masterTodos: state => () => {
-      return state.todos.filter((todo) =>
-        [TODO_TYPE.EPIC, TODO_TYPE.SCHEDULED].includes(todo.type)
-        && !todo.parentTodoId
-      )
-    },
-    dailyTodos: state => () => {
-      return state.todos.filter((todo) =>
-        todo.type == TODO_TYPE.SIMPLE
-      )
-    }
-  },
+  mutations,
+  getters,
   actions: {
     bindFirestoreRef: firestoreAction(({ bindFirestoreRef, commit, getters, state }, ref) => {
       bindFirestoreRef('todos', ref)
@@ -94,9 +51,7 @@ export default new Vuex.Store({
     },
 
     updateTodo({ commit, state }, todo) {
-      if (!todo) {
-        todo = state.current.todo
-      }
+      todo = todo || state.current.todo
       this.commit('updateTodo', todo)
 
       if (state.current.todo.id == todo.id) {
